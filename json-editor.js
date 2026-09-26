@@ -38,9 +38,9 @@ class JSON_Editor extends HTMLElement {
 
         this.last_string_content = ''
         this.attachShadow({ mode: 'open' })
-        this.shadowRoot.appendChild( template.content.cloneNode(true) )
+        this.shadowRoot.appendChild(template.content.cloneNode(true))
         this.editor = this.shadowRoot.getElementById('editor')
-        this.addEventListener('keyup', _ => this.format() )
+        this.addEventListener('keyup', _ => this.format())
     }
 
     connectedCallback() {
@@ -50,7 +50,7 @@ class JSON_Editor extends HTMLElement {
 
 
     get_selection() {
-        if( this.shadowRoot.getSelection )
+        if (this.shadowRoot.getSelection)
             return this.shadowRoot.getSelection()
         return document.getSelection()
     }
@@ -63,7 +63,7 @@ class JSON_Editor extends HTMLElement {
             caret_range.selectNodeContents(this.editor)
             caret_range.setEnd(range.endContainer, range.endOffset)
             const section = caret_range.toString()
-            const character = section[section.length-1]
+            const character = section[section.length - 1]
             const occurrence = this.get_number_of_occurrences(section, character)
             return { character, occurrence, section }
         }
@@ -76,12 +76,12 @@ class JSON_Editor extends HTMLElement {
         let nodes_to_explore = this.get_text_nodes(this.editor)
         let occurrence = pointer.occurrence
         let fount_at = 0
-        let i=0
+        let i = 0
 
-        for(i=0; i<nodes_to_explore.length; i++) {
+        for (i = 0; i < nodes_to_explore.length; i++) {
             const node = nodes_to_explore[i]
             fount_at = this.get_position_of_occurrence(node.textContent, pointer.character, occurrence)
-            if(fount_at >= 0 )
+            if (fount_at >= 0)
                 break
             occurrence -= this.get_number_of_occurrences(node.textContent, pointer.character)
         }
@@ -108,36 +108,36 @@ class JSON_Editor extends HTMLElement {
     }
 
     get_text_nodes(element) {
-        let node, list=[], walk=document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false)
-        while(node=walk.nextNode())
+        let node, list = [], walk = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false)
+        while (node = walk.nextNode())
             list.push(node)
         return list
     }
 
 
     escape_html(input) {
-        const replace = [ ['&', '&amp;'], ['<', '&lt;'], ['>', '&gt;'], ['"', '&quot;'], ["'", '&#039;'] ]
-        return replace.reduce( ( escaped, replacement) => escaped.replaceAll( ...replacement ), input)
+        const replace = [['&', '&amp;'], ['<', '&lt;'], ['>', '&gt;'], ['"', '&quot;'], ["'", '&#039;']]
+        return replace.reduce((escaped, replacement) => escaped.replaceAll(...replacement), input)
     }
 
-    format_object(input, offset=0) {
-        if( input === null )
+    format_object(input, offset = 0) {
+        if (input === null)
             return '<span part="null">null</span>'
         let output = ''
         output += `<span part="braces">{</span><br>\n`
         output += Object.keys(input).map((key, index, list) => {
-            return `${'&nbsp;'.repeat(offset+this.indent)}<span part="key" part="key"><span part="key_quotes">\"</span>${this.escape_html(key)}<span part="key_quotes">\"</span></span><span part="colon">:</span><span part="value">${this.format_input(input[key], offset+this.indent)}</span>${index < list.length-1 ? '<span part="comma">,</span>' : ''}<br>\n`
+            return `${'&nbsp;'.repeat(offset + this.indent)}<span part="key" part="key"><span part="key_quotes">\"</span>${this.escape_html(key)}<span part="key_quotes">\"</span></span><span part="colon">:</span><span part="value">${this.format_input(input[key], offset + this.indent)}</span>${index < list.length - 1 ? '<span part="comma">,</span>' : ''}<br>\n`
         }).join('')
         output += '&nbsp;'.repeat(offset)
         output += `<span part="braces">}</span>`
         return output
     }
 
-    format_array(input, offset=0) {
+    format_array(input, offset = 0) {
         let output = ''
         output += `<span part="brackets">[</span><br>\n`
         output += input.map((value, index, list) => {
-            return `${'&nbsp;'.repeat(offset+this.indent)}<span>${this.format_input(value, offset+this.indent)}</span>${index < list.length-1 ? '<span part="comma">,</span>' : ''}<br>\n`
+            return `${'&nbsp;'.repeat(offset + this.indent)}<span>${this.format_input(value, offset + this.indent)}</span>${index < list.length - 1 ? '<span part="comma">,</span>' : ''}<br>\n`
         }).join('')
         output += '&nbsp;'.repeat(offset)
         output += `<span part="brackets">]</span>`
@@ -157,7 +157,7 @@ class JSON_Editor extends HTMLElement {
     }
 
     // format a json input
-    format_input(input, offset=0) {
+    format_input(input, offset = 0) {
         const type = Array.isArray(input) ? 'array' : typeof input
         switch (type) {
             case 'object':
@@ -182,17 +182,17 @@ class JSON_Editor extends HTMLElement {
         try {
             content = JSON.parse(this.raw_string)
         }
-        catch(exception) {
+        catch (exception) {
             return
         }
 
         const current_string_content = JSON.stringify(content)
-        if(!content || current_string_content === this.last_string_content)
+        if (!content || current_string_content === this.last_string_content)
             return
 
         editor.innerHTML = this.format_input(content)
         this.last_string_content = current_string_content
-        if(pointer && focus)
+        if (pointer && focus)
             this.set_caret_from_pointer(pointer)
     }
 
@@ -201,7 +201,7 @@ class JSON_Editor extends HTMLElement {
         return this.editor.innerText?.replaceAll('\xa0', '') || ''
     }
 
-    set raw_string( input ) {
+    set raw_string(input) {
         this.string_value = input
     }
 
@@ -209,7 +209,7 @@ class JSON_Editor extends HTMLElement {
         return this.last_string_content
     }
 
-    set string_value( input ) {
+    set string_value(input) {
         this.editor.innerText = input
         this.format()
     }
@@ -218,24 +218,24 @@ class JSON_Editor extends HTMLElement {
         return this.string_value
     }
 
-    set value( input ) {
+    set value(input) {
         return this.string_value = input
     }
 
     get json_value() {
-        return JSON.parse( this.string_value )
+        return JSON.parse(this.string_value)
     }
 
-    set json_value( input ) {
-        this.string_value = JSON.stringify( input )
+    set json_value(input) {
+        this.string_value = JSON.stringify(input)
     }
 
     is_valid() {
         try {
-            JSON.parse( this.raw_string )
+            JSON.parse(this.raw_string)
             return true
         }
-        catch(e) {
+        catch (e) {
             return false
         }
     }

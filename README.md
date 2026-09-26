@@ -1,138 +1,150 @@
-# JSON Editor
+# JSON Formatter
 
-A HTML text editor for json inputs, with auto indentation and syntax highlight, both on the fly while typing. If this doesn't sound good enough:
+A small, browser-based JSON formatter built with **HTML, CSS, and JavaScript**.
 
-- NO libraries, frameworks or transpilers required.
-- It works with vanilla HTML / JS and it doesn't have any dependency.
-- Easy integration, as it's a single javascript file. Available as a node package as well.
-- FULL styling control with CSS.
+I made this project to keep working with JSON simple: paste your JSON, click **Format JSON**, and get a clean, readable version. It also shows a clear error message when the JSON is not valid.
 
-Just add in your document:
+## Preview
 
-```html
-<json-editor></json-editor>
+The page has a simple layout with:
+
+- A JSON editor
+- A **Format JSON** button
+- A **Clear** button
+- A message area for success and error messages
+
+> Add a screenshot of the project here.
+
+```md
+![JSON Formatter Screenshot](./screenshot.png)
 ```
 
-to render this:
+## Features
 
-[![ezgif-com-gif-maker-2.webp](https://i.postimg.cc/sxr2Tf7s/ezgif-com-gif-maker-2.webp)](https://postimg.cc/0MVxQsVB)
+- Format and indent JSON automatically
+- Validate JSON before formatting
+- Show the actual parsing error when the JSON is invalid
+- Clear the editor with one click
+- Simple and responsive interface
+- No backend or database required
+- Works directly in the browser
 
-# How to install
+## How It Works
 
-## Setup for vanilla HTML / JS
+The main idea is pretty straightforward.
 
-Just take the file `json-editor.js` file. Then, add it to your application as usual.
-
-```html
-<script src="json-editor.js" />
-```
-
-## Setup for Node
-
-First, add the package to your project.
-
-```bash
-npm install native-json-editor --save
-```
-
-Second and last, add the package to the files for which you will use it.
+When the **Format JSON** button is clicked, the application tries to parse the text using JavaScript's `JSON.parse()`:
 
 ```javascript
-require('native-json-editor')
+const json = JSON.parse(editor.value);
 ```
 
-# How to use it
+If the JSON is valid, it is converted back to a formatted string using `JSON.stringify()`:
 
-After the setup, you will have 1 new HTML tag available to use: `json-editor`.
-
-## `<json-editor>`
-
-Defines a new editor, similar to a vanilla textarea.
-
-### Attributes
-
-- `value`: You can initialise the editor with some json, just add your json as a STRING using this value.
-- `indent`: The number of "spaces" used in the indentation, default is 3.
-
-For clarity, consider the following example:
-
-```html
-<json-editor value='[ 1, 2, {"hello":"world"} ]' indent="5"></json-editor>
+```javascript
+editor.value = JSON.stringify(json, null, 4);
 ```
 
-That will render:
+The `4` means that nested values are indented by four spaces.
 
-[![json-editor-2.png](https://i.postimg.cc/3NccKN1H/json-editor-2.png)](https://postimg.cc/Mf1D5Wgs)
+If parsing fails, the error is caught and displayed below the buttons:
 
-### API
-
-To control the editor programmatically, you can use the following getters and setters:
-
-- `raw_string`: Gets/Sets the editor content as a string. Getter returns the current editor content even if it is invalid json. It includes new line characters (\n). Example:
-    ```javascript
-    // get
-    const value = editor.raw_string // returns '[\n1,\n2,\n{\n"hello":"world"\n}\n]' as a string
-    ```
-
-- `string_value`: Gets/Sets the editor content as a string. Getter returns the **LAST VALID** json string. Example:
-    ```javascript
-    // get
-    const value = editor.string_value // returns '[ 1, 2, {"hello":"world"} ]' as a string
-    // set
-    editor.string_value = '{ "other": "stuff" }' // sets the content of the editor
-    ```
-- `json_value`: Gets/Sets the editor content as data. Getter returns the **LAST VALID** json value. Example:
-    ```javascript
-    // get
-    const value = editor.json_value // returns an array [ 1, 2, {"hello":"world"} ]
-    // set
-    editor.json_value = { "other": "stuff" } // sets the content of the editor from an object
-    ```
-- `value`: Value is just an alias for string_value, with no difference but the name. I recommend to use the prefixed getters and setters for clarity, but it's on you.
-    ```javascript
-    // get
-    const value = editor.value // returns '[ 1, 2, {"hello":"world"} ]' as a string
-    // set
-    editor.value = '{ "other": "stuff" }' // sets the content of the editor
-    ```
-
-- `is_valid()`: A method which returns true or false, depending if the current editor content is valid json or not.
-    ```javascript
-    // get
-    editor.is_valid() // returns true
-    ```
-
-# Styling
-
-To customize the style, we just need some CSS. As example we can create a "light theme" version of the editor just with:
-
-```css
-/* a class name for the editor */
-.light {
-    background: #FFF;
-    border: 1px solid black;
+```javascript
+catch (error) {
+    message.textContent = "Invalid JSON: " + error.message;
 }
-
-/* to customise the different tokens of the json syntax, we just do... */
-.light::part(braces)        { color: #00b2e8 } /* curly braces {} */
-.light::part(brackets)      { color: #d26a6a } /* brackets [] */
-.light::part(colon)         { color: #000000 } /* colon : */
-.light::part(comma)         { color: #000000 } /* comma , */
-.light::part(string)        { color: #7c0d29; background: rgb(224, 213, 151) } /* strings */
-.light::part(string_quotes) { color: #112ba1 } /* quotes wrapping strings */
-.light::part(key)           { color: #1d0bbe; background: #20f5ff; } /* object keys */
-.light::part(key_quotes)    { color: #ff2032 } /* quotes wrapping object keys */
-.light::part(value)         { border: 1px solid #000 } /* object value */
-.light::part(number)        { color: #ef33b0 } /* number */
-.light::part(null)          { color: #21d6ff; background: #000; } /* null keyword */
-.light::part(true)          { color: #ffd6d6; background: #000; } /* true keyword */
-.light::part(false)         { color: #d6ffd6; background: #000; } /* false keyword */
 ```
+
+This makes it easy to find problems instead of getting a generic error.
+
+## Example
+
+### Before
+
+```json
+{"name":"John","age":25,"skills":["PHP","Laravel","JavaScript"],"active":true}
+```
+
+### After
+
+```json
+{
+    "name": "John",
+    "age": 25,
+    "skills": [
+        "PHP",
+        "Laravel",
+        "JavaScript"
+    ],
+    "active": true
+}
+```
+
+## Running the Project
+
+No installation is required.
+
+1. Clone or download the project.
+2. Open `index.html` in your browser.
+3. Paste your JSON into the editor.
+4. Click **Format JSON**.
+
+
+## Custom JSON Editor
+
+The project also includes a custom `<json-editor>` Web Component.
+
+It uses **Shadow DOM** and a `contentEditable` element to create a more advanced JSON editing experience. The component can parse JSON and format different values separately, including:
+
+- Objects
+- Arrays
+- Strings
+- Numbers
+- Booleans
+- `null`
+
+Different JSON parts can also be styled with CSS using the `part` attribute, for example:
 
 ```html
-<json-editor class="light"></json-editor>
+<span part="number">25</span>
+<span part="string">"Laravel"</span>
+<span part="true">true</span>
 ```
 
-the above will result in:
+This makes it possible to build a syntax-highlighted JSON editor without depending on a large external editor library.
 
-[![json-editor-4.png](https://i.postimg.cc/NF6kn0n4/json-editor-4.png)](https://postimg.cc/p5djhPRh)
+## Technologies
+
+- HTML5
+- CSS3
+- JavaScript
+- Web Components
+- Shadow DOM
+- `contentEditable`
+- Native JavaScript JSON API
+
+## What I Learned
+
+While building this project, I worked with a few useful browser and JavaScript concepts:
+
+- Parsing JSON with `JSON.parse()`
+- Formatting JSON with `JSON.stringify()`
+- Handling errors with `try...catch`
+- Updating the DOM with JavaScript
+- Creating custom Web Components
+- Working with Shadow DOM
+- Using `contentEditable` for browser-based editors
+
+## Possible Improvements
+
+There are a few things I would like to add in a future version:
+
+- Copy formatted JSON to the clipboard
+- Download JSON as a `.json` file
+- Minify JSON
+- Better syntax highlighting
+- Dark mode
+- Drag and drop a JSON file
+- Live formatting while typing
+- Line numbers
+- Better handling of very large JSON files
