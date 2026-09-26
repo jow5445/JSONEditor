@@ -5,6 +5,7 @@ A small, browser-based JSON formatter built with **HTML, CSS, and JavaScript**.
 I made this project to keep working with JSON simple: paste your JSON, click **Format JSON**, and get a clean, readable version. It also shows a clear error message when the JSON is not valid.
 
 ## Preview
+![JSON Formatter](https://user-cdn.hackclub-assets.com/01a0dee9-732c-7d75-9564-3e7d2e2e4a52/Screenshot%20From%202026-09-26%2020-56-53.png)
 
 The page has a simple layout with:
 
@@ -12,8 +13,6 @@ The page has a simple layout with:
 - A **Format JSON** button
 - A **Clear** button
 - A message area for success and error messages
-
-![JSON Formatter](https://user-cdn.hackclub-assets.com/01a0dee9-732c-7d75-9564-3e7d2e2e4a52/Screenshot%20From%202026-09-26%2020-56-53.png)
 
 ## Features
 
