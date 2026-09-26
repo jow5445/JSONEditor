@@ -13,9 +13,7 @@ The page has a simple layout with:
 - A **Clear** button
 - A message area for success and error messages
 
-```md
 ![JSON Formatter](https://user-cdn.hackclub-assets.com/01a0dee9-732c-7d75-9564-3e7d2e2e4a52/Screenshot%20From%202026-09-26%2020-56-53.png)
-```
 
 ## Features
 
