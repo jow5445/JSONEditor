@@ -197,7 +197,6 @@ class JSON_Editor extends HTMLElement {
     }
 
     get raw_string() {
-        // remove %A0 (NBSP) characters, which are no valid in JSON
         return this.editor.innerText?.replaceAll('\xa0', '') || ''
     }
 

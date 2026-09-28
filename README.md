@@ -85,29 +85,6 @@ No installation is required.
 4. Click **Format JSON**.
 
 
-## Custom JSON Editor
-
-The project also includes a custom `<json-editor>` Web Component.
-
-It uses **Shadow DOM** and a `contentEditable` element to create a more advanced JSON editing experience. The component can parse JSON and format different values separately, including:
-
-- Objects
-- Arrays
-- Strings
-- Numbers
-- Booleans
-- `null`
-
-Different JSON parts can also be styled with CSS using the `part` attribute, for example:
-
-```html
-<span part="number">25</span>
-<span part="string">"Laravel"</span>
-<span part="true">true</span>
-```
-
-This makes it possible to build a syntax-highlighted JSON editor without depending on a large external editor library.
-
 ## Technologies
 
 - HTML5
